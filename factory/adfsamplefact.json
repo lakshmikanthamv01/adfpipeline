@@ -1,0 +1,12 @@
+{
+	"name": "adfsamplefact",
+	"properties": {
+		"globalParameters": {
+			"weburl": {
+				"type": "string",
+				"value": "https://www.dummy.restapiexample.com/"
+			}
+		}
+	},
+	"location": "eastus"
+}
