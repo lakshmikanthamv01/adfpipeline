@@ -5,6 +5,10 @@
 			"weburl": {
 				"type": "string",
 				"value": "https://www.dummy.restapiexample.com/"
+			},
+			"stagingcontainername": {
+				"type": "string",
+				"value": "/rptsstageblob/correctsource"
 			}
 		}
 	},
