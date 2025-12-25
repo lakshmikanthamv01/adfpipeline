@@ -9,6 +9,10 @@
 			"stagingcontainername": {
 				"type": "string",
 				"value": "/rptsstageblob/correctsource"
+			},
+			"stagingincorrectfile": {
+				"type": "string",
+				"value": "/rptsstageblob/wrongfiles"
 			}
 		}
 	},
