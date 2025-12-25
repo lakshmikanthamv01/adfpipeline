@@ -6,6 +6,26 @@
 			"type": "string",
 			"metadata": "Data Factory name",
 			"defaultValue": "adfsamplefact"
+		},
+		"srckeyvault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://azure-keyvaultrscgrp.vault.azure.net/"
+		},
+		"default_properties_weburl_value": {
+			"type": "string",
+			"defaultValue": "https://www.dummy.restapiexample.com/"
+		},
+		"default_properties_stagingcorrectfile_value": {
+			"type": "string",
+			"defaultValue": "/rptsstageblob/correctsource"
+		},
+		"default_properties_stagingincorrectfile_value": {
+			"type": "string",
+			"defaultValue": "/rptsstageblob/wrongfiles"
+		},
+		"default_properties_sourcecontainername_value": {
+			"type": "string",
+			"defaultValue": "/rptsourcecontainer"
 		}
 	},
 	"variables": {
@@ -36,6 +56,46 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/movefiletostorage')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "GET",
+							"headers": {},
+							"url": "https://www.dummy.restapiexample.com/"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"filename": {
+						"type": "string"
+					},
+					"containername": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/plwaitactivity')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -55,6 +115,43 @@
 					"elapsedTimeMetric": {}
 				},
 				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/srckeyvault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('srckeyvault_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/default')]",
+			"type": "Microsoft.DataFactory/factories/globalparameters",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"weburl": {
+					"type": "string",
+					"value": "[parameters('default_properties_weburl_value')]"
+				},
+				"stagingcorrectfile": {
+					"type": "string",
+					"value": "[parameters('default_properties_stagingcorrectfile_value')]"
+				},
+				"stagingincorrectfile": {
+					"type": "string",
+					"value": "[parameters('default_properties_stagingincorrectfile_value')]"
+				},
+				"sourcecontainername": {
+					"type": "string",
+					"value": "[parameters('default_properties_sourcecontainername_value')]"
+				}
 			},
 			"dependsOn": []
 		}

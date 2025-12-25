@@ -4,6 +4,21 @@
 	"parameters": {
 		"factoryName": {
 			"value": "adfsamplefact"
+		},
+		"srckeyvault_properties_typeProperties_baseUrl": {
+			"value": "https://azure-keyvaultrscgrp.vault.azure.net/"
+		},
+		"default_properties_weburl_value": {
+			"value": "https://www.dummy.restapiexample.com/"
+		},
+		"default_properties_stagingcorrectfile_value": {
+			"value": "/rptsstageblob/correctsource"
+		},
+		"default_properties_stagingincorrectfile_value": {
+			"value": "/rptsstageblob/wrongfiles"
+		},
+		"default_properties_sourcecontainername_value": {
+			"value": "/rptsourcecontainer"
 		}
 	}
 }

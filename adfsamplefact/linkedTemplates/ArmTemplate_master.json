@@ -7,6 +7,26 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "adfsamplefact"
 		},
+		"srckeyvault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://azure-keyvaultrscgrp.vault.azure.net/"
+		},
+		"default_properties_weburl_value": {
+			"type": "string",
+			"defaultValue": "https://www.dummy.restapiexample.com/"
+		},
+		"default_properties_stagingcorrectfile_value": {
+			"type": "string",
+			"defaultValue": "/rptsstageblob/correctsource"
+		},
+		"default_properties_stagingincorrectfile_value": {
+			"type": "string",
+			"defaultValue": "/rptsstageblob/wrongfiles"
+		},
+		"default_properties_sourcecontainername_value": {
+			"type": "string",
+			"defaultValue": "/rptsourcecontainer"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -33,6 +53,21 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"default_properties_weburl_value": {
+						"value": "[parameters('default_properties_weburl_value')]"
+					},
+					"default_properties_stagingcorrectfile_value": {
+						"value": "[parameters('default_properties_stagingcorrectfile_value')]"
+					},
+					"default_properties_stagingincorrectfile_value": {
+						"value": "[parameters('default_properties_stagingincorrectfile_value')]"
+					},
+					"default_properties_sourcecontainername_value": {
+						"value": "[parameters('default_properties_sourcecontainername_value')]"
+					},
+					"srckeyvault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('srckeyvault_properties_typeProperties_baseUrl')]"
 					}
 				}
 			},
