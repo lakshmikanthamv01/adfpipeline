@@ -5,6 +5,18 @@
 			"weburl": {
 				"type": "string",
 				"value": "https://www.dummy.restapiexample.com/"
+			},
+			"stagingcorrectfile": {
+				"type": "string",
+				"value": "/rptsstageblob/correctsource"
+			},
+			"stagingincorrectfile": {
+				"type": "string",
+				"value": "/rptsstageblob/wrongfiles"
+			},
+			"sourcecontainername": {
+				"type": "string",
+				"value": "/rptsourcecontainer"
 			}
 		}
 	},
