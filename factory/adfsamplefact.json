@@ -13,6 +13,10 @@
 			"stagingincorrectfile": {
 				"type": "string",
 				"value": "/rptsstageblob/wrongfiles"
+			},
+			"sourcecontainername": {
+				"type": "string",
+				"value": "/rptsourcecontainer"
 			}
 		}
 	},
