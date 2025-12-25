@@ -6,7 +6,7 @@
 				"type": "string",
 				"value": "https://www.dummy.restapiexample.com/"
 			},
-			"stagingcontainername": {
+			"stagingcorrectfile": {
 				"type": "string",
 				"value": "/rptsstageblob/correctsource"
 			},
