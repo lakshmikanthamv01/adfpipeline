@@ -1,0 +1,17 @@
+{
+	"name": "dssinkfolder",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lsstaginputblb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "outputcontainergrp"
+			}
+		}
+	}
+}
