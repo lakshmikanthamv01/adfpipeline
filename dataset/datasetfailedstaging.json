@@ -1,0 +1,23 @@
+{
+	"name": "datasetfailedstaging",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lsfailedstaging",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "wrongfiles",
+				"container": "rptsstageblob"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
