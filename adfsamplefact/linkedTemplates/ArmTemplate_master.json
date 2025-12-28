@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "inputblbstorage"
+		},
 		"srckeyvault_properties_typeProperties_baseUrl": {
 			"type": "string",
 			"defaultValue": "https://azure-keyvaultrscgrp.vault.azure.net/"
@@ -75,6 +79,9 @@
 					},
 					"srckeyvault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('srckeyvault_properties_typeProperties_baseUrl')]"
+					},
+					"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('lsstaginputblb_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
