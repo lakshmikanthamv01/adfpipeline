@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "salesdatainputdataset",
+						"referenceName": "csvsource",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
@@ -151,7 +151,13 @@
 										"inputs": [
 											{
 												"referenceName": "salesdatainputdataset",
-												"type": "DatasetReference"
+												"type": "DatasetReference",
+												"parameters": {
+													"filename": {
+														"value": "@activity('GetFilesInfo').output.itemName",
+														"type": "Expression"
+													}
+												}
 											}
 										],
 										"outputs": [
