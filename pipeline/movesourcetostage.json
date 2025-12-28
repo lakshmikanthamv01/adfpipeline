@@ -98,14 +98,12 @@
 							],
 							"userProperties": [],
 							"typeProperties": {
-								"expression": {
-									"value": "@activity('Individualfileinfo').output.size > 0",
-									"type": "Expression"
-								},
 								"ifFalseActivities": [
 									{
 										"name": "CopytoFailedStaging",
 										"type": "Copy",
+										"state": "Inactive",
+										"onInactiveMarkAs": "Succeeded",
 										"dependsOn": [],
 										"policy": {
 											"timeout": "0.12:00:00",
@@ -172,6 +170,8 @@
 									{
 										"name": "CopytoStagingCorrectFiles",
 										"type": "Copy",
+										"state": "Inactive",
+										"onInactiveMarkAs": "Succeeded",
 										"dependsOn": [],
 										"policy": {
 											"timeout": "0.12:00:00",
