@@ -1,0 +1,23 @@
+{
+	"name": "datasetstagingcoorectfilesink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lsstaginputblb",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "correctsource",
+				"container": "rptsstageblob"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
