@@ -8,6 +8,15 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"FileServer1_password": {
+			"value": ""
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"value": "//MSI/reportfiles"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"value": "ashwitha"
+		},
 		"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
 			"value": "inputblbstorage"
 		},

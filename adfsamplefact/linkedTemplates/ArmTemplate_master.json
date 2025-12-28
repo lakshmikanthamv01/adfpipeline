@@ -11,6 +11,18 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"FileServer1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FileServer1'"
+		},
+		"FileServer1_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "//MSI/reportfiles"
+		},
+		"FileServer1_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "ashwitha"
+		},
 		"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "inputblbstorage"
@@ -65,6 +77,9 @@
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
+					"FileServer1_password": {
+						"value": "[parameters('FileServer1_password')]"
+					},
 					"default_properties_weburl_value": {
 						"value": "[parameters('default_properties_weburl_value')]"
 					},
@@ -79,6 +94,12 @@
 					},
 					"srckeyvault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('srckeyvault_properties_typeProperties_baseUrl')]"
+					},
+					"FileServer1_properties_typeProperties_host": {
+						"value": "[parameters('FileServer1_properties_typeProperties_host')]"
+					},
+					"FileServer1_properties_typeProperties_userId": {
+						"value": "[parameters('FileServer1_properties_typeProperties_userId')]"
 					},
 					"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('lsstaginputblb_properties_typeProperties_connectionString_secretName')]"
