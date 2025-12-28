@@ -1,0 +1,17 @@
+{
+	"name": "lsstaginputblb",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobStorage",
+		"typeProperties": {
+			"connectionString": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "srckeyvault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "inputblbstorage"
+			}
+		}
+	}
+}
