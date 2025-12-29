@@ -98,6 +98,10 @@
 							],
 							"userProperties": [],
 							"typeProperties": {
+								"expression": {
+									"value": "@greater(activity('Individualfileinfo').output.size,0)",
+									"type": "Expression"
+								},
 								"ifFalseActivities": [
 									{
 										"name": "CopytoFailedStaging",
@@ -235,11 +239,40 @@
 									}
 								]
 							}
+						},
+						{
+							"name": "SetFileSize",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Individualfileinfo",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "file_size",
+								"value": {
+									"value": "@activity('Individualfileinfo').output.size",
+									"type": "Expression"
+								}
+							}
 						}
 					]
 				}
 			}
 		],
+		"variables": {
+			"file_size": {
+				"type": "Integer"
+			}
+		},
 		"annotations": []
 	}
 }
