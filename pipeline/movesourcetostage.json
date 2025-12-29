@@ -277,7 +277,7 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"variableName": "TempVariable",
+											"variableName": "trueVariable",
 											"value": 0
 										}
 									}
@@ -316,7 +316,7 @@
 			"file_size": {
 				"type": "Integer"
 			},
-			"TempVariable": {
+			"trueVariable": {
 				"type": "Integer"
 			},
 			"falsevariable": {
