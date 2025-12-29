@@ -101,7 +101,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@greater(activity('Individualfileinfo').output.size,0)",
+									"value": "@item().name",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -156,7 +156,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"filename": {
-														"value": "@activity('GetFilesInfo').output.itemName",
+														"value": "@item().name",
 														"type": "Expression"
 													}
 												}
@@ -222,7 +222,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"filename": {
-														"value": "@activity('GetFilesInfo').output.itemName",
+														"value": "@activity('GetFilesInfo').output.childItems.name",
 														"type": "Expression"
 													}
 												}
