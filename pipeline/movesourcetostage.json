@@ -90,7 +90,7 @@
 							"type": "IfCondition",
 							"dependsOn": [
 								{
-									"activity": "Individualfileinfo",
+									"activity": "SetFileSize",
 									"dependencyConditions": [
 										"Succeeded"
 									]
