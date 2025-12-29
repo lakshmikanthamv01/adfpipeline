@@ -88,7 +88,7 @@
 							}
 						},
 						{
-							"name": "trueeverification",
+							"name": "sizeverification",
 							"type": "IfCondition",
 							"dependsOn": [
 								{
@@ -201,7 +201,7 @@
 										"onInactiveMarkAs": "Succeeded",
 										"dependsOn": [
 											{
-												"activity": "TempValue",
+												"activity": "TrueTempValue",
 												"dependencyConditions": [
 													"Succeeded"
 												]
@@ -268,7 +268,7 @@
 										]
 									},
 									{
-										"name": "TempValue",
+										"name": "TrueTempValue",
 										"type": "SetVariable",
 										"dependsOn": [],
 										"policy": {
