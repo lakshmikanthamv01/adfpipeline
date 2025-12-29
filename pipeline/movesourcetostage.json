@@ -24,6 +24,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -78,6 +79,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -99,7 +101,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@greater(variables('file_size'),0)",
+									"value": "@greater(activity('Individualfileinfo').output.size,0)",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -108,7 +110,14 @@
 										"type": "Copy",
 										"state": "Inactive",
 										"onInactiveMarkAs": "Succeeded",
-										"dependsOn": [],
+										"dependsOn": [
+											{
+												"activity": "falsvariablevalue",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
 										"policy": {
 											"timeout": "0.12:00:00",
 											"retry": 0,
@@ -168,6 +177,20 @@
 												"type": "DatasetReference"
 											}
 										]
+									},
+									{
+										"name": "falsvariablevalue",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "falsevariable",
+											"value": 1
+										}
 									}
 								],
 								"ifTrueActivities": [
@@ -176,7 +199,14 @@
 										"type": "Copy",
 										"state": "Inactive",
 										"onInactiveMarkAs": "Succeeded",
-										"dependsOn": [],
+										"dependsOn": [
+											{
+												"activity": "TempValue",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
 										"policy": {
 											"timeout": "0.12:00:00",
 											"retry": 0,
@@ -236,6 +266,20 @@
 												"type": "DatasetReference"
 											}
 										]
+									},
+									{
+										"name": "TempValue",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"policy": {
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "TempVariable",
+											"value": 0
+										}
 									}
 								]
 							}
@@ -270,6 +314,12 @@
 		],
 		"variables": {
 			"file_size": {
+				"type": "Integer"
+			},
+			"TempVariable": {
+				"type": "Integer"
+			},
+			"falsevariable": {
 				"type": "Integer"
 			}
 		},
