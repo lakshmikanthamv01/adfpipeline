@@ -101,7 +101,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@item().name",
+									"value": "@greater(activity('Individualfileinfo').output.size,0)",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
@@ -222,7 +222,7 @@
 												"type": "DatasetReference",
 												"parameters": {
 													"filename": {
-														"value": "@activity('GetFilesInfo').output.childItems.name",
+														"value": "@item().name",
 														"type": "Expression"
 													}
 												}
