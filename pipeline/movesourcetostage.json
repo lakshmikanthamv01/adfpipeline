@@ -99,7 +99,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"expression": {
-									"value": "@greater(activity('Individualfileinfo').output.size,0)",
+									"value": "@greater(variables('file_size'),0)",
 									"type": "Expression"
 								},
 								"ifFalseActivities": [
