@@ -8,6 +8,18 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"lsfailedstaging_connectionString": {
+			"value": ""
+		},
+		"lssourceblb_connectionString": {
+			"value": ""
+		},
+		"lsstagecsvfile_accountKey": {
+			"value": ""
+		},
+		"lsstagecsvfile_properties_typeProperties_url": {
+			"value": "https://azureblbstrg.dfs.core.windows.net/"
+		},
 		"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
 			"value": "inputblbstorage"
 		},

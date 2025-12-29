@@ -11,6 +11,22 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"lsfailedstaging_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'lsfailedstaging'"
+		},
+		"lssourceblb_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'lssourceblb'"
+		},
+		"lsstagecsvfile_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'lsstagecsvfile'"
+		},
+		"lsstagecsvfile_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://azureblbstrg.dfs.core.windows.net/"
+		},
 		"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
 			"type": "string",
 			"defaultValue": "inputblbstorage"
@@ -65,6 +81,15 @@
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
+					"lsfailedstaging_connectionString": {
+						"value": "[parameters('lsfailedstaging_connectionString')]"
+					},
+					"lssourceblb_connectionString": {
+						"value": "[parameters('lssourceblb_connectionString')]"
+					},
+					"lsstagecsvfile_accountKey": {
+						"value": "[parameters('lsstagecsvfile_accountKey')]"
+					},
 					"default_properties_weburl_value": {
 						"value": "[parameters('default_properties_weburl_value')]"
 					},
@@ -76,6 +101,9 @@
 					},
 					"default_properties_sourcecontainername_value": {
 						"value": "[parameters('default_properties_sourcecontainername_value')]"
+					},
+					"lsstagecsvfile_properties_typeProperties_url": {
+						"value": "[parameters('lsstagecsvfile_properties_typeProperties_url')]"
 					},
 					"srckeyvault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('srckeyvault_properties_typeProperties_baseUrl')]"
