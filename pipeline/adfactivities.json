@@ -350,6 +350,8 @@
 			{
 				"name": "Lookup2",
 				"type": "Lookup",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -377,6 +379,51 @@
 					},
 					"firstRowOnly": false
 				}
+			},
+			{
+				"name": "Set temp_j",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "temp_j",
+					"value": {
+						"value": "@add(variables('counter_i'), 2)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Set Counter Variable",
+				"type": "SetVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Set temp_j",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "counter_i",
+					"value": {
+						"value": "@add(variables('temp_j'),1)",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"concurrency": 2,
@@ -401,6 +448,14 @@
 				"defaultValue": [
 					"val"
 				]
+			},
+			"counter_i": {
+				"type": "Integer",
+				"defaultValue": 1
+			},
+			"temp_j": {
+				"type": "Integer",
+				"defaultValue": 0
 			}
 		},
 		"annotations": []
