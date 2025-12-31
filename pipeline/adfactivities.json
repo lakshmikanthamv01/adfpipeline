@@ -5,6 +5,8 @@
 			{
 				"name": "Copy data1",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -82,6 +84,8 @@
 			{
 				"name": "Copy data1_copy1",
 				"type": "Copy",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -155,9 +159,53 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Append variable1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "testappendvariable",
+					"value": {
+						"value": "@pipeline().globalParameters.sourcecontainername",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Append variable1_copy1",
+				"type": "AppendVariable",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "testappendvariable",
+					"value": {
+						"value": "@pipeline().parameters.testappendparameter",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"concurrency": 2,
+		"parameters": {
+			"testappendparameter": {
+				"type": "array",
+				"defaultValue": [
+					"test",
+					"test01"
+				]
+			}
+		},
+		"variables": {
+			"testappendvariable": {
+				"type": "Array",
+				"defaultValue": [
+					"hello",
+					"hi"
+				]
+			}
+		},
 		"annotations": []
 	}
 }
