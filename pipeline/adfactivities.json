@@ -217,6 +217,8 @@
 			{
 				"name": "Execute Pipeline1",
 				"type": "ExecutePipeline",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"policy": {
 					"secureInput": false
@@ -228,6 +230,18 @@
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Fail1",
+				"type": "Fail",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"message": "Custome Error",
+					"errorCode": "550"
 				}
 			}
 		],
