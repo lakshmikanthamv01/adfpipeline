@@ -525,11 +525,11 @@
 			},
 			"counter_i": {
 				"type": "Integer",
-				"defaultValue": 2
+				"defaultValue": 10
 			},
 			"temp_j": {
 				"type": "Integer",
-				"defaultValue": 0
+				"defaultValue": 1
 			}
 		},
 		"annotations": []
