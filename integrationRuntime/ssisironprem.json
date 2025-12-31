@@ -1,0 +1,29 @@
+{
+	"name": "ssisironprem",
+	"properties": {
+		"type": "Managed",
+		"description": "lift and shift ssis package",
+		"typeProperties": {
+			"computeProperties": {
+				"location": "West US",
+				"nodeSize": "Standard_D8_v3",
+				"numberOfNodes": 2,
+				"maxParallelExecutionsPerNode": 4
+			},
+			"ssisProperties": {
+				"catalogInfo": {
+					"catalogServerEndpoint": "usdssqlsrvr.database.windows.net",
+					"catalogAdminUserName": "sauser",
+					"catalogAdminPassword": {
+						"type": "SecureString",
+						"value": "**********"
+					},
+					"catalogPricingTier": "S1"
+				},
+				"edition": "Standard",
+				"runtimeVersion": "2017",
+				"licenseType": "LicenseIncluded"
+			}
+		}
+	}
+}
