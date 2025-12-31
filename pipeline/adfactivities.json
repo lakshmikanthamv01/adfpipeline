@@ -494,7 +494,7 @@
 				"typeProperties": {
 					"variableName": "counter_i",
 					"value": {
-						"value": "@activity('Web1').output.statuscode",
+						"value": "@activity('Web1').output.ID",
 						"type": "Expression"
 					}
 				}
@@ -525,7 +525,7 @@
 			},
 			"counter_i": {
 				"type": "Integer",
-				"defaultValue": 1
+				"defaultValue": 2
 			},
 			"temp_j": {
 				"type": "Integer",
