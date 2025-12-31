@@ -35,6 +35,10 @@
 			"type": "string",
 			"defaultValue": "https://azure-keyvaultrscgrp.vault.azure.net/"
 		},
+		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
+			"type": "string",
+			"defaultValue": "est"
+		},
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "usdssqlsrvr.database.windows.net"
@@ -45,10 +49,6 @@
 		},
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
-			"type": "string",
-			"defaultValue": "est"
 		},
 		"default_properties_weburl_value": {
 			"type": "string",

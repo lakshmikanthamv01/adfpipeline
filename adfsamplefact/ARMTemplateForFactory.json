@@ -35,6 +35,10 @@
 			"type": "string",
 			"defaultValue": "https://azure-keyvaultrscgrp.vault.azure.net/"
 		},
+		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
+			"type": "string",
+			"defaultValue": "est"
+		},
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "usdssqlsrvr.database.windows.net"
@@ -45,10 +49,6 @@
 		},
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
-			"type": "string",
-			"defaultValue": "est"
 		},
 		"default_properties_weburl_value": {
 			"type": "string",
@@ -294,6 +294,8 @@
 					{
 						"name": "Execute Pipeline1",
 						"type": "ExecutePipeline",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"secureInput": false
@@ -306,6 +308,83 @@
 							},
 							"waitOnCompletion": true,
 							"parameters": {}
+						}
+					},
+					{
+						"name": "Fail1",
+						"type": "Fail",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"message": "Custome Error",
+							"errorCode": "550"
+						}
+					},
+					{
+						"name": "Filter1",
+						"type": "Filter",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('testappendvariable')",
+								"type": "Expression"
+							},
+							"condition": {
+								"value": "@startswith(item(),'h')",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Append variable2",
+						"type": "AppendVariable",
+						"dependsOn": [
+							{
+								"activity": "Filter1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "newarray",
+							"value": {
+								"value": "@activity('Filter1').output",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Execute Pipeline2",
+						"type": "ExecutePipeline",
+						"dependsOn": [
+							{
+								"activity": "Append variable2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "arraypipeline",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {
+								"arrayinput": {
+									"value": "@variables('newarray')",
+									"type": "Expression"
+								}
+							}
 						}
 					}
 				],
@@ -324,7 +403,15 @@
 						"type": "Array",
 						"defaultValue": [
 							"hello",
-							"hi"
+							"hi",
+							"go",
+							"heelo"
+						]
+					},
+					"newarray": {
+						"type": "Array",
+						"defaultValue": [
+							"val"
 						]
 					}
 				},
@@ -333,8 +420,40 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/csvsource')]",
 				"[concat(variables('factoryId'), '/datasets/datasetCorrectStaging')]",
-				"[concat(variables('factoryId'), '/pipelines/plwaitactivity')]"
+				"[concat(variables('factoryId'), '/pipelines/plwaitactivity')]",
+				"[concat(variables('factoryId'), '/pipelines/arraypipeline')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/arraypipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 1
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"arrayinput": {
+						"type": "array",
+						"defaultValue": [
+							""
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/moveReportFile')]",
@@ -1033,6 +1152,39 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/scheduletrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "adfactivities",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"testappendparameter": "[parameters('scheduletrigger_properties_adfactivities_parameters_testappendparameter')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2025-12-31T21:30:00",
+						"endTime": "2026-01-01T21:30:00",
+						"timeZone": "Eastern Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/adfactivities')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/selfhostedonprem')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
@@ -1071,39 +1223,6 @@
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/scheduletrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Started",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "adfactivities",
-							"type": "PipelineReference"
-						},
-						"parameters": {
-							"testappendparameter": "[parameters('scheduletrigger_properties_adfactivities_parameters_testappendparameter')]"
-						}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 15,
-						"startTime": "2025-12-31T21:30:00",
-						"endTime": "2026-01-01T21:30:00",
-						"timeZone": "Eastern Standard Time"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/adfactivities')]"
-			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/default')]",

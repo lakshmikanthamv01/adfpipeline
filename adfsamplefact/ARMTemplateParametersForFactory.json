@@ -26,6 +26,9 @@
 		"srckeyvault_properties_typeProperties_baseUrl": {
 			"value": "https://azure-keyvaultrscgrp.vault.azure.net/"
 		},
+		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
+			"value": "est"
+		},
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"value": "usdssqlsrvr.database.windows.net"
 		},
@@ -34,9 +37,6 @@
 		},
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
-		},
-		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
-			"value": "est"
 		},
 		"default_properties_weburl_value": {
 			"value": "https://www.dummy.restapiexample.com/"
