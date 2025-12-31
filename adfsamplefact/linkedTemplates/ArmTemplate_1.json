@@ -504,6 +504,50 @@
 								"type": "DelimitedTextReadSettings"
 							}
 						}
+					},
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "GET",
+							"headers": {
+								"application": "json"
+							},
+							"url": "https://jsonplaceholder.typicode.com/posts/1"
+						}
+					},
+					{
+						"name": "Set Weboutput",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Web1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "counter_i",
+							"value": {
+								"value": "@activity('Web1').output.ID",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"concurrency": 2,
@@ -534,11 +578,11 @@
 					},
 					"counter_i": {
 						"type": "Integer",
-						"defaultValue": 1
+						"defaultValue": 10
 					},
 					"temp_j": {
 						"type": "Integer",
-						"defaultValue": 0
+						"defaultValue": 1
 					}
 				},
 				"annotations": []
