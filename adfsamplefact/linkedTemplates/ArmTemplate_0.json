@@ -534,6 +534,8 @@
 					{
 						"name": "Copy data1",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -612,6 +614,8 @@
 					{
 						"name": "Copy data1_copy1",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -686,17 +690,104 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Append variable1",
+						"type": "AppendVariable",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "testappendvariable",
+							"value": {
+								"value": "@pipeline().globalParameters.sourcecontainername",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Append variable1_copy1",
+						"type": "AppendVariable",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "testappendvariable",
+							"value": {
+								"value": "@pipeline().parameters.testappendparameter",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Append variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Append variable1_copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 2
+						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "plwaitactivity",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"concurrency": 2,
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"parameters": {
+					"testappendparameter": {
+						"type": "string",
+						"defaultValue": "est"
+					}
+				},
+				"variables": {
+					"testappendvariable": {
+						"type": "Array",
+						"defaultValue": [
+							"hello",
+							"hi"
+						]
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/csvsource')]",
-				"[concat(variables('factoryId'), '/datasets/datasetCorrectStaging')]"
+				"[concat(variables('factoryId'), '/datasets/datasetCorrectStaging')]",
+				"[concat(variables('factoryId'), '/pipelines/plwaitactivity')]"
 			]
 		},
 		{

@@ -46,6 +46,10 @@
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
+			"type": "string",
+			"defaultValue": "est"
+		},
 		"default_properties_weburl_value": {
 			"type": "string",
 			"defaultValue": "https://www.dummy.restapiexample.com/"
@@ -134,6 +138,29 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "adfsamplefact_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
+						"value": "[parameters('scheduletrigger_properties_adfactivities_parameters_testappendparameter')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adfsamplefact_ArmTemplate_0')]"
+			]
 		}
 	]
 }

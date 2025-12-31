@@ -46,6 +46,10 @@
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
 		},
+		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
+			"type": "string",
+			"defaultValue": "est"
+		},
 		"default_properties_weburl_value": {
 			"type": "string",
 			"defaultValue": "https://www.dummy.restapiexample.com/"
@@ -76,6 +80,8 @@
 					{
 						"name": "Copy data1",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -154,6 +160,8 @@
 					{
 						"name": "Copy data1_copy1",
 						"type": "Copy",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -228,17 +236,104 @@
 								}
 							}
 						]
+					},
+					{
+						"name": "Append variable1",
+						"type": "AppendVariable",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "testappendvariable",
+							"value": {
+								"value": "@pipeline().globalParameters.sourcecontainername",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Append variable1_copy1",
+						"type": "AppendVariable",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "testappendvariable",
+							"value": {
+								"value": "@pipeline().parameters.testappendparameter",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [
+							{
+								"activity": "Append variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Append variable1_copy1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 2
+						}
+					},
+					{
+						"name": "Execute Pipeline1",
+						"type": "ExecutePipeline",
+						"dependsOn": [],
+						"policy": {
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"pipeline": {
+								"referenceName": "plwaitactivity",
+								"type": "PipelineReference"
+							},
+							"waitOnCompletion": true,
+							"parameters": {}
+						}
 					}
 				],
 				"concurrency": 2,
 				"policy": {
 					"elapsedTimeMetric": {}
 				},
+				"parameters": {
+					"testappendparameter": {
+						"type": "string",
+						"defaultValue": "est"
+					}
+				},
+				"variables": {
+					"testappendvariable": {
+						"type": "Array",
+						"defaultValue": [
+							"hello",
+							"hi"
+						]
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/csvsource')]",
-				"[concat(variables('factoryId'), '/datasets/datasetCorrectStaging')]"
+				"[concat(variables('factoryId'), '/datasets/datasetCorrectStaging')]",
+				"[concat(variables('factoryId'), '/pipelines/plwaitactivity')]"
 			]
 		},
 		{
@@ -976,6 +1071,39 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/scheduletrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "adfactivities",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"testappendparameter": "[parameters('scheduletrigger_properties_adfactivities_parameters_testappendparameter')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 15,
+						"startTime": "2025-12-31T21:30:00",
+						"endTime": "2026-01-01T21:30:00",
+						"timeZone": "Eastern Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/adfactivities')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/default')]",

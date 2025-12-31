@@ -35,6 +35,9 @@
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"value": ""
 		},
+		"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
+			"value": "est"
+		},
 		"default_properties_weburl_value": {
 			"value": "https://www.dummy.restapiexample.com/"
 		},
