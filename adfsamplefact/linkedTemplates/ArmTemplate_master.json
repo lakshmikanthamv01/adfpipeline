@@ -19,9 +19,25 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'lssourceblb'"
 		},
+		"lssqldblinkedservice_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'lssqldblinkedservice'"
+		},
 		"lsstagecsvfile_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'lsstagecsvfile'"
+		},
+		"lssqldblinkedservice_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "usdssqlsrvr.database.windows.net"
+		},
+		"lssqldblinkedservice_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldbadfsample"
+		},
+		"lssqldblinkedservice_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sauser"
 		},
 		"lsstagecsvfile_properties_typeProperties_url": {
 			"type": "string",
@@ -102,6 +118,9 @@
 					"lssourceblb_connectionString": {
 						"value": "[parameters('lssourceblb_connectionString')]"
 					},
+					"lssqldblinkedservice_password": {
+						"value": "[parameters('lssqldblinkedservice_password')]"
+					},
 					"lsstagecsvfile_accountKey": {
 						"value": "[parameters('lsstagecsvfile_accountKey')]"
 					},
@@ -117,6 +136,15 @@
 					"default_properties_sourcecontainername_value": {
 						"value": "[parameters('default_properties_sourcecontainername_value')]"
 					},
+					"lssqldblinkedservice_properties_typeProperties_server": {
+						"value": "[parameters('lssqldblinkedservice_properties_typeProperties_server')]"
+					},
+					"lssqldblinkedservice_properties_typeProperties_database": {
+						"value": "[parameters('lssqldblinkedservice_properties_typeProperties_database')]"
+					},
+					"lssqldblinkedservice_properties_typeProperties_userName": {
+						"value": "[parameters('lssqldblinkedservice_properties_typeProperties_userName')]"
+					},
 					"lsstagecsvfile_properties_typeProperties_url": {
 						"value": "[parameters('lsstagecsvfile_properties_typeProperties_url')]"
 					},
@@ -131,9 +159,6 @@
 					},
 					"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 						"value": "[parameters('ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
-					},
-					"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
-						"value": "[parameters('lsstaginputblb_properties_typeProperties_connectionString_secretName')]"
 					}
 				}
 			},
@@ -152,6 +177,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('lsstaginputblb_properties_typeProperties_connectionString_secretName')]"
 					},
 					"scheduletrigger_properties_adfactivities_parameters_testappendparameter": {
 						"value": "[parameters('scheduletrigger_properties_adfactivities_parameters_testappendparameter')]"

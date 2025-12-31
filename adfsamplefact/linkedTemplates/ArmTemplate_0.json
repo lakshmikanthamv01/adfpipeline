@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'lssourceblb'"
 		},
+		"lssqldblinkedservice_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'lssqldblinkedservice'"
+		},
 		"lsstagecsvfile_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'lsstagecsvfile'"
@@ -39,6 +43,18 @@
 			"type": "string",
 			"defaultValue": "/rptsourcecontainer"
 		},
+		"lssqldblinkedservice_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "usdssqlsrvr.database.windows.net"
+		},
+		"lssqldblinkedservice_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sqldbadfsample"
+		},
+		"lssqldblinkedservice_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "sauser"
+		},
 		"lsstagecsvfile_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://azureblbstrg.dfs.core.windows.net/"
@@ -57,10 +73,6 @@
 		},
 		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
-		},
-		"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
-			"type": "string",
-			"defaultValue": "inputblbstorage"
 		}
 	},
 	"variables": {
@@ -258,6 +270,28 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/lssqldblinkedservice')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('lssqldblinkedservice_properties_typeProperties_server')]",
+					"database": "[parameters('lssqldblinkedservice_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": true,
+					"authenticationType": "SQL",
+					"userName": "[parameters('lssqldblinkedservice_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('lssqldblinkedservice_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/lsstagecsvfile')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -326,6 +360,74 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "lssqldblinkedservice",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "ID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "FirstName",
+						"type": "varchar"
+					},
+					{
+						"name": "LastName",
+						"type": "varchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "emp"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/lssqldblinkedservice')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DelimitedText1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "fafa.txt",
+						"container": "inputcontainergrp"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "ID|FirstName|LastName",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/Salesinputfiledataset')]",
@@ -532,409 +634,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/lssourceblb')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/lsstaginputblb')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobStorage",
-				"typeProperties": {
-					"connectionString": {
-						"type": "AzureKeyVaultSecret",
-						"store": {
-							"referenceName": "srckeyvault",
-							"type": "LinkedServiceReference"
-						},
-						"secretName": "[parameters('lsstaginputblb_properties_typeProperties_connectionString_secretName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/srckeyvault')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/adfactivities')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"additionalColumns": [
-									{
-										"name": "filepath",
-										"value": "$$FILEPATH"
-									},
-									{
-										"name": "containername",
-										"value": {
-											"value": "@pipeline().globalParameters.sourcecontainername",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "csvsource",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "datasetCorrectStaging",
-								"type": "DatasetReference",
-								"parameters": {
-									"filename": {
-										"value": "testfile.csv",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "Copy data1_copy1",
-						"type": "Copy",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"additionalColumns": [
-									{
-										"name": "filepath",
-										"value": "$$FILEPATH"
-									},
-									{
-										"name": "containername",
-										"value": {
-											"value": "@pipeline().globalParameters.sourcecontainername",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": false,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "csvsource",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "datasetCorrectStaging",
-								"type": "DatasetReference",
-								"parameters": {
-									"filename": {
-										"value": "testfile.csv",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
-						"name": "Append variable1",
-						"type": "AppendVariable",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "testappendvariable",
-							"value": {
-								"value": "@pipeline().globalParameters.sourcecontainername",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Append variable1_copy1",
-						"type": "AppendVariable",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "testappendvariable",
-							"value": {
-								"value": "@pipeline().parameters.testappendparameter",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Wait1",
-						"type": "Wait",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [
-							{
-								"activity": "Append variable1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Append variable1_copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"waitTimeInSeconds": 2
-						}
-					},
-					{
-						"name": "Execute Pipeline1",
-						"type": "ExecutePipeline",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "plwaitactivity",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "Fail1",
-						"type": "Fail",
-						"state": "Inactive",
-						"onInactiveMarkAs": "Succeeded",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"message": "Custome Error",
-							"errorCode": "550"
-						}
-					},
-					{
-						"name": "Filter1",
-						"type": "Filter",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@variables('testappendvariable')",
-								"type": "Expression"
-							},
-							"condition": {
-								"value": "@startswith(item(),'h')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Append variable2",
-						"type": "AppendVariable",
-						"dependsOn": [
-							{
-								"activity": "Filter1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "newarray",
-							"value": {
-								"value": "@activity('Filter1').output",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Execute Pipeline2",
-						"type": "ExecutePipeline",
-						"dependsOn": [
-							{
-								"activity": "Append variable2",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "arraypipeline",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {
-								"arrayinput": {
-									"value": "@variables('newarray')",
-									"type": "Expression"
-								}
-							}
-						}
-					}
-				],
-				"concurrency": 2,
-				"policy": {
-					"elapsedTimeMetric": {}
-				},
-				"parameters": {
-					"testappendparameter": {
-						"type": "string",
-						"defaultValue": "est"
-					}
-				},
-				"variables": {
-					"testappendvariable": {
-						"type": "Array",
-						"defaultValue": [
-							"hello",
-							"hi",
-							"go",
-							"heelo"
-						]
-					},
-					"newarray": {
-						"type": "Array",
-						"defaultValue": [
-							"val"
-						]
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/csvsource')]",
-				"[concat(variables('factoryId'), '/datasets/datasetCorrectStaging')]",
-				"[concat(variables('factoryId'), '/pipelines/plwaitactivity')]",
-				"[concat(variables('factoryId'), '/pipelines/arraypipeline')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/datasetstagingcoorectfilesink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "lsstaginputblb",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": "correctsource",
-						"container": "rptsstageblob"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/lsstaginputblb')]"
 			]
 		}
 	]

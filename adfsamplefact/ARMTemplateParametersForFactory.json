@@ -14,8 +14,20 @@
 		"lssourceblb_connectionString": {
 			"value": ""
 		},
+		"lssqldblinkedservice_password": {
+			"value": ""
+		},
 		"lsstagecsvfile_accountKey": {
 			"value": ""
+		},
+		"lssqldblinkedservice_properties_typeProperties_server": {
+			"value": "usdssqlsrvr.database.windows.net"
+		},
+		"lssqldblinkedservice_properties_typeProperties_database": {
+			"value": "sqldbadfsample"
+		},
+		"lssqldblinkedservice_properties_typeProperties_userName": {
+			"value": "sauser"
 		},
 		"lsstagecsvfile_properties_typeProperties_url": {
 			"value": "https://azureblbstrg.dfs.core.windows.net/"
