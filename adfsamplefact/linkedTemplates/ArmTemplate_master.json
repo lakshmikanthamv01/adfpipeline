@@ -35,6 +35,17 @@
 			"type": "string",
 			"defaultValue": "https://azure-keyvaultrscgrp.vault.azure.net/"
 		},
+		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+			"type": "string",
+			"defaultValue": "usdssqlsrvr.database.windows.net"
+		},
+		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+			"type": "string",
+			"defaultValue": "sauser"
+		},
+		"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+			"type": "secureString"
+		},
 		"default_properties_weburl_value": {
 			"type": "string",
 			"defaultValue": "https://www.dummy.restapiexample.com/"
@@ -107,6 +118,15 @@
 					},
 					"srckeyvault_properties_typeProperties_baseUrl": {
 						"value": "[parameters('srckeyvault_properties_typeProperties_baseUrl')]"
+					},
+					"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
+						"value": "[parameters('ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
+					},
+					"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName": {
+						"value": "[parameters('ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminUserName')]"
+					},
+					"ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
+						"value": "[parameters('ssisironprm_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
 					},
 					"lsstaginputblb_properties_typeProperties_connectionString_secretName": {
 						"value": "[parameters('lsstaginputblb_properties_typeProperties_connectionString_secretName')]"
