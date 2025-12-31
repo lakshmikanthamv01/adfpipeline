@@ -243,6 +243,71 @@
 					"message": "Custome Error",
 					"errorCode": "550"
 				}
+			},
+			{
+				"name": "Filter1",
+				"type": "Filter",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables('testappendvariable')",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@startswith(item(),'h')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Append variable2",
+				"type": "AppendVariable",
+				"dependsOn": [
+					{
+						"activity": "Filter1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "newarray",
+					"value": {
+						"value": "@activity('Filter1').output",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Execute Pipeline2",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Append variable2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "arraypipeline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"arrayinput": {
+							"value": "@variables('newarray')",
+							"type": "Expression"
+						}
+					}
+				}
 			}
 		],
 		"concurrency": 2,
@@ -257,7 +322,15 @@
 				"type": "Array",
 				"defaultValue": [
 					"hello",
-					"hi"
+					"hi",
+					"go",
+					"heelo"
+				]
+			},
+			"newarray": {
+				"type": "Array",
+				"defaultValue": [
+					"val"
 				]
 			}
 		},
