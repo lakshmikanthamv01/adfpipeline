@@ -247,6 +247,8 @@
 			{
 				"name": "Filter1",
 				"type": "Filter",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
@@ -263,6 +265,8 @@
 			{
 				"name": "Append variable2",
 				"type": "AppendVariable",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Filter1",
@@ -283,6 +287,8 @@
 			{
 				"name": "Execute Pipeline2",
 				"type": "ExecutePipeline",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [
 					{
 						"activity": "Append variable2",
