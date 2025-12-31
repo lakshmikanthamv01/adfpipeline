@@ -190,11 +190,8 @@
 		"concurrency": 2,
 		"parameters": {
 			"testappendparameter": {
-				"type": "array",
-				"defaultValue": [
-					"test",
-					"test01"
-				]
+				"type": "string",
+				"defaultValue": "est"
 			}
 		},
 		"variables": {
