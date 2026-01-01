@@ -26,6 +26,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "adfsqlserver"
+				},
+				{
+					"dataset": {
+						"referenceName": "csvsource",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "csvsource",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
 				}
 			],
 			"transformations": [
@@ -34,6 +48,9 @@
 				},
 				{
 					"name": "aggregate1"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -62,8 +79,10 @@
 				"     format: 'table') ~> source1",
 				"sqlsource derive(fullname = concat(FirstName,' ',LastName),",
 				"          idfirstname = concat(toString(ID),' - ', FirstName)) ~> fullname",
-				"source1 aggregate(groupBy(FirstName),",
+				"split1@oddrows aggregate(groupBy(FirstName),",
 				"     idcount = count(ID)) ~> aggregate1",
+				"source1 split(equals(minus(ID, 1), 0) ,",
+				"     disjoint: false) ~> split1@(oddrows, evenrows)",
 				"fullname sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -73,7 +92,25 @@
 				"     format: 'table',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     errorHandlingOption: 'stopOnFirstError') ~> adfsqlserver"
+				"     errorHandlingOption: 'stopOnFirstError') ~> adfsqlserver",
+				"split1@evenrows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          empid as string,",
+				"          empname as string,",
+				"          salaryamt as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1",
+				"split1@oddrows sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          empid as string,",
+				"          empname as string,",
+				"          salaryamt as string",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink2"
 			]
 		}
 	}
