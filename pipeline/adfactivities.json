@@ -627,11 +627,7 @@
 						}
 					},
 					"staging": {
-						"linkedService": {
-							"referenceName": "AzureBlobStorage1",
-							"type": "LinkedServiceReference"
-						},
-						"folderPath": "inputcontainergrp"
+						"folderPath": ""
 					},
 					"compute": {
 						"coreCount": 8,
