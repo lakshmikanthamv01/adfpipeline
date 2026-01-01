@@ -38,7 +38,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     inputparamter as integer",
+				"     inputparamter as integer (1)",
 				"}",
 				"source(output(",
 				"          ID as integer,",
