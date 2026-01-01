@@ -555,6 +555,8 @@
 					{
 						"name": "Web1",
 						"type": "WebActivity",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
@@ -575,6 +577,8 @@
 					{
 						"name": "Set Weboutput",
 						"type": "SetVariable",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [
 							{
 								"activity": "Web1",
@@ -594,6 +598,30 @@
 								"value": "@activity('Web1').output.ID",
 								"type": "Expression"
 							}
+						}
+					},
+					{
+						"name": "TestLoopForEach",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@variables('foreachnumerator')",
+								"type": "Expression"
+							},
+							"isSequential": false,
+							"activities": [
+								{
+									"name": "Wait2",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 2
+									}
+								}
+							]
 						}
 					}
 				],
@@ -630,6 +658,16 @@
 					"temp_j": {
 						"type": "Integer",
 						"defaultValue": 1
+					},
+					"foreachnumerator": {
+						"type": "Array",
+						"defaultValue": [
+							1,
+							2,
+							3,
+							4,
+							5
+						]
 					}
 				},
 				"annotations": []
