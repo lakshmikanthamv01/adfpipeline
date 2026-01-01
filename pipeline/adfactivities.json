@@ -568,6 +568,8 @@
 			{
 				"name": "Switch1",
 				"type": "Switch",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
 				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
@@ -619,7 +621,10 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "adfdataflowtransformations",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"inputparamter": 1
+						}
 					},
 					"staging": {
 						"linkedService": {
