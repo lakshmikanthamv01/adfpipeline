@@ -1,0 +1,58 @@
+{
+	"name": "childpipeline01",
+	"properties": {
+		"activities": [
+			{
+				"name": "pipelinereturnvalues",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "pipelineReturnValue",
+					"value": [
+						{
+							"key": "string_prv",
+							"value": {
+								"type": "String",
+								"content": "This is string value"
+							}
+						},
+						{
+							"key": "expression_prv",
+							"value": {
+								"type": "Expression",
+								"content": "@utcNow()"
+							}
+						},
+						{
+							"key": "array_prv",
+							"value": {
+								"type": "Array",
+								"content": [
+									{
+										"type": "String",
+										"content": "First"
+									},
+									{
+										"type": "String",
+										"content": "Second"
+									},
+									{
+										"type": "String",
+										"content": "Third"
+									}
+								]
+							}
+						}
+					],
+					"setSystemVariable": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
