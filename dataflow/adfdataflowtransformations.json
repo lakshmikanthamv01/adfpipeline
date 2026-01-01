@@ -9,18 +9,23 @@
 						"referenceName": "lssqldblinkedservice",
 						"type": "LinkedServiceReference"
 					},
-					"name": "source1"
+					"name": "sqlsource"
 				}
 			],
 			"sinks": [],
 			"transformations": [],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          ID as integer,",
+				"          FirstName as string,",
+				"          LastName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'query',",
 				"     store: 'sqlserver',",
 				"     query: 'SELECT * FROM DBO.EMP',",
-				"     isolationLevel: 'READ_UNCOMMITTED') ~> source1"
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> sqlsource"
 			]
 		}
 	}
