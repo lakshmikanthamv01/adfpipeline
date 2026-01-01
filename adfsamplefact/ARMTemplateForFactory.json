@@ -603,6 +603,8 @@
 					{
 						"name": "TestLoopForEach",
 						"type": "ForEach",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
 						"dependsOn": [],
 						"userProperties": [],
 						"typeProperties": {
@@ -619,6 +621,42 @@
 									"userProperties": [],
 									"typeProperties": {
 										"waitTimeInSeconds": 2
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "If Condition1",
+						"type": "IfCondition",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@greater(variables('counter_i'),2 )",
+								"type": "Expression"
+							},
+							"ifFalseActivities": [
+								{
+									"name": "falsewait",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
+								}
+							],
+							"ifTrueActivities": [
+								{
+									"name": "TrueWait",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
 									}
 								}
 							]
@@ -653,7 +691,7 @@
 					},
 					"counter_i": {
 						"type": "Integer",
-						"defaultValue": 10
+						"defaultValue": 1
 					},
 					"temp_j": {
 						"type": "Integer",
@@ -1520,7 +1558,7 @@
 				"typeProperties": {
 					"recurrence": {
 						"frequency": "Minute",
-						"interval": 15,
+						"interval": 5,
 						"startTime": "2025-12-31T21:30:00",
 						"endTime": "2026-01-01T21:30:00",
 						"timeZone": "Eastern Standard Time"
