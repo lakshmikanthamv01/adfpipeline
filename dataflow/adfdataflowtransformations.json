@@ -27,6 +27,9 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     inputparamter as integer",
+				"}",
 				"source(output(",
 				"          ID as integer,",
 				"          FirstName as string,",
