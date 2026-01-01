@@ -204,6 +204,9 @@
 						},
 						{
 							"name": "split1"
+						},
+						{
+							"name": "join1"
 						}
 					],
 					"scriptLines": [
@@ -230,7 +233,14 @@
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table') ~> source1",
-						"source(allowSchemaDrift: true,",
+						"source(output(",
+						"          ID as integer,",
+						"          FirstName as string,",
+						"          LastName as string,",
+						"          fullname as string,",
+						"          idfirstname as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table') ~> source2",
@@ -240,6 +250,11 @@
 						"     idcount = count(ID)) ~> aggregate1",
 						"source1 split(equals(minus(ID, 1), 0),",
 						"     disjoint: false) ~> split1@(oddrows, evenrows)",
+						"source2, source1 join(source2@ID == source1@ID,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> join1",
 						"fullname sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
