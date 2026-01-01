@@ -163,6 +163,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "source1"
+						},
+						{
+							"dataset": {
+								"referenceName": "AzureNewSQLTable",
+								"type": "DatasetReference"
+							},
+							"name": "source2"
 						}
 					],
 					"sinks": [
@@ -223,6 +230,10 @@
 						"     validateSchema: false,",
 						"     isolationLevel: 'READ_UNCOMMITTED',",
 						"     format: 'table') ~> source1",
+						"source(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     isolationLevel: 'READ_UNCOMMITTED',",
+						"     format: 'table') ~> source2",
 						"sqlsource derive(fullname = concat(FirstName,' ',LastName),",
 						"          idfirstname = concat(toString(ID),' - ', FirstName)) ~> fullname",
 						"split1@oddrows aggregate(groupBy(FirstName),",
@@ -900,6 +911,7 @@
 								"datasetParameters": {
 									"sqlsource": {},
 									"source1": {},
+									"source2": {},
 									"adfsqlserver": {},
 									"sink1": {},
 									"sink2": {}
