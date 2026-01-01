@@ -10,6 +10,13 @@
 						"type": "LinkedServiceReference"
 					},
 					"name": "sqlsource"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
 				}
 			],
 			"sinks": [
@@ -24,6 +31,9 @@
 			"transformations": [
 				{
 					"name": "fullname"
+				},
+				{
+					"name": "aggregate1"
 				}
 			],
 			"scriptLines": [
@@ -41,8 +51,19 @@
 				"     store: 'sqlserver',",
 				"     query: 'SELECT * FROM DBO.EMP',",
 				"     isolationLevel: 'READ_UNCOMMITTED') ~> sqlsource",
+				"source(output(",
+				"          ID as integer,",
+				"          FirstName as string,",
+				"          LastName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
 				"sqlsource derive(fullname = concat(FirstName,' ',LastName),",
 				"          idfirstname = concat(toString(ID),' - ', FirstName)) ~> fullname",
+				"source1 aggregate(groupBy(FirstName),",
+				"     idcount = count(ID)) ~> aggregate1",
 				"fullname sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
