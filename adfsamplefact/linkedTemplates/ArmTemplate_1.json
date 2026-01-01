@@ -21,6 +21,32 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/datasetfailedstaging')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "lsfailedstaging",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "wrongfiles",
+						"container": "rptsstageblob"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/salesdatainputdataset')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -84,6 +110,96 @@
 						},
 						"secretName": "[parameters('lsstaginputblb_properties_typeProperties_connectionString_secretName')]"
 					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/datasetstagingcoorectfilesink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "lsstaginputblb",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": "correctsource",
+						"container": "rptsstageblob"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/lsstaginputblb')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/adfdataflowtransformations')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "lssqldblinkedservice",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sqlsource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureNewSQLTable",
+								"type": "DatasetReference"
+							},
+							"name": "adfsqlserver"
+						}
+					],
+					"transformations": [
+						{
+							"name": "fullname"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     inputparamter as integer",
+						"}",
+						"source(output(",
+						"          ID as integer,",
+						"          FirstName as string,",
+						"          LastName as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'query',",
+						"     store: 'sqlserver',",
+						"     query: 'SELECT * FROM DBO.EMP',",
+						"     isolationLevel: 'READ_UNCOMMITTED') ~> sqlsource",
+						"sqlsource derive(fullname = concat(FirstName,' ',LastName),",
+						"          idfirstname = concat(toString(ID),' - ', FirstName)) ~> fullname",
+						"fullname sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> adfsqlserver"
+					]
 				}
 			},
 			"dependsOn": []
@@ -662,6 +778,79 @@
 								}
 							]
 						}
+					},
+					{
+						"name": "Switch1",
+						"type": "Switch",
+						"state": "Inactive",
+						"onInactiveMarkAs": "Succeeded",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"on": {
+								"value": "@string(variables('counter_i'))",
+								"type": "Expression"
+							},
+							"cases": [
+								{
+									"value": "1",
+									"activities": [
+										{
+											"name": "1Wait",
+											"type": "Wait",
+											"dependsOn": [],
+											"userProperties": [],
+											"typeProperties": {
+												"waitTimeInSeconds": 1
+											}
+										}
+									]
+								}
+							],
+							"defaultActivities": [
+								{
+									"name": "DWait",
+									"type": "Wait",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitTimeInSeconds": 1
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "azuresqldataflow",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "adfdataflowtransformations",
+								"type": "DataFlowReference",
+								"parameters": {
+									"inputparamter": 1
+								},
+								"datasetParameters": {
+									"sqlsource": {},
+									"adfsqlserver": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
 					}
 				],
 				"concurrency": 2,
@@ -711,34 +900,8 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/datasetstagingcoorectfilesink')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "lsstaginputblb",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobStorageLocation",
-						"folderPath": "correctsource",
-						"container": "rptsstageblob"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": []
-			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/lsstaginputblb')]"
+				"[concat(variables('factoryId'), '/dataflows/adfdataflowtransformations')]"
 			]
 		},
 		{
@@ -1008,6 +1171,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/salesdatainputdataset')]",
+				"[concat(variables('factoryId'), '/datasets/datasetfailedstaging')]",
 				"[concat(variables('factoryId'), '/datasets/datasetstagingcoorectfilesink')]"
 			]
 		},
