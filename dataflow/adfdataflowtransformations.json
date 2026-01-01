@@ -12,8 +12,20 @@
 					"name": "sqlsource"
 				}
 			],
-			"sinks": [],
-			"transformations": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureNewSQLTable",
+						"type": "DatasetReference"
+					},
+					"name": "adfsqlserver"
+				}
+			],
+			"transformations": [
+				{
+					"name": "fullname"
+				}
+			],
 			"scriptLines": [
 				"source(output(",
 				"          ID as integer,",
@@ -25,7 +37,19 @@
 				"     format: 'query',",
 				"     store: 'sqlserver',",
 				"     query: 'SELECT * FROM DBO.EMP',",
-				"     isolationLevel: 'READ_UNCOMMITTED') ~> sqlsource"
+				"     isolationLevel: 'READ_UNCOMMITTED') ~> sqlsource",
+				"sqlsource derive(fullname = concat(FirstName,' ',LastName),",
+				"          idfirstname = concat(toString(ID),' - ', FirstName)) ~> fullname",
+				"fullname sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> adfsqlserver"
 			]
 		}
 	}

@@ -1,0 +1,16 @@
+{
+	"name": "AzureNewSQLTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "lssqldblinkedservice",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "employee"
+		}
+	}
+}
